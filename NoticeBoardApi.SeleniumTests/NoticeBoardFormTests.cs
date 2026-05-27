@@ -14,14 +14,30 @@ namespace NoticeBoardApi.SeleniumTests
         
 
         // update path
+       
+
         public NoticeBoardFormTests()
         {
             var options = new ChromeOptions();
-            // options.AddArgument("--headless");  // uncomment for CI/CD 
+
+
+
+            var isCi = Environment.GetEnvironmentVariable("CI") == "true";
+            if (isCi)
+            {
+                options.AddArgument("--headless=new");
+                options.AddArgument("--no-sandbox");
+                options.AddArgument("--disable-dev-shm-usage");
+            }
+
+
+
             _driver = new ChromeDriver(options);
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _driver.Navigate().GoToUrl(IndexHtmlPath);
         }
+
+
 
         public void Dispose() => _driver.Quit();
 
