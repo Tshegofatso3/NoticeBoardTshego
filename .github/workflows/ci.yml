@@ -22,7 +22,7 @@ jobs:
         run: dotnet restore NoticeBoardApi.slnx
  
       - name: Build solution
-        run: dotnet build NoticeBoardApi.sln --no-restore --configuration Release
+        run: dotnet build NoticeBoardApi.slnx --no-restore --configuration Release
  
       # --- Unit tests: fast, no browser needed. This is your DEV gate. ---
       - name: Run unit tests
