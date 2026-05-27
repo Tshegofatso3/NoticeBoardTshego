@@ -79,6 +79,7 @@ if (app.Environment.IsDevelopment())
 
     });
 }
+//ygyy
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestLoggingMiddleware>();
 using (var scope = app.Services.CreateScope())
