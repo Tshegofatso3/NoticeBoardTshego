@@ -1,0 +1,81 @@
+name: CI — Build and Test
+on:
+  push:
+    branches: [ main, 'feature/**' ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build-and-test:
+    name: Build and Run Tests
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+ 
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+ 
+      - name: Restore NuGet packages
+        run: dotnet restore NoticeBoardApi.sln
+ 
+      - name: Build solution
+        run: dotnet build NoticeBoardApi.sln --no-restore --configuration Release
+ 
+      # --- Unit tests: fast, no browser needed. This is your DEV gate. ---
+      - name: Run unit tests
+        run: |
+          dotnet test NoticeBoardApi.Tests/NoticeBoardApi.Tests.csproj \
+            --no-build --configuration Release \
+            --collect:'XPlat Code Coverage' \
+            --results-directory ./coverage \
+            --verbosity normal
+ 
+      # --- Install Playwright's browser binaries (after build, before UI tests) ---
+      - name: Install Playwright browsers
+        run: pwsh NoticeBoardApi.PlaywrightTests/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
+ 
+      # --- UI tests: slower, need a browser. Closer to a STAGING gate. ---
+      - name: Run Playwright tests
+        run: |
+          dotnet test NoticeBoardApi.PlaywrightTests/NoticeBoardApi.PlaywrightTests.csproj \
+            --no-build --configuration Release --verbosity normal
+ 
+      - name: Run Selenium tests
+        run: |
+          dotnet test NoticeBoardApi.SeleniumTests/NoticeBoardApi.SeleniumTests.csproj \
+            --no-build --configuration Release --verbosity normal
+ 
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+ 
+      - name: Debug coverage output
+        run: |
+          pwd
+          ls -R ./coverage || echo "no coverage dir"
+ 
+      - name: Generate coverage report
+        if: always()
+        run: |
+          dotnet tool run reportgenerator \
+            -reports:'./coverage/**/coverage.cobertura.xml' \
+            -targetdir:'./coverage/report' \
+            -reporttypes:'Html;MarkdownSummaryGithub'
+ 
+      - name: Publish coverage summary
+        if: always()
+        run: |
+          if [ -f ./coverage/report/SummaryGithub.md ]; then
+            cat ./coverage/report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Coverage summary not found — skipping" >> "$GITHUB_STEP_SUMMARY"
+          fi
+ 
+      - name: Upload coverage report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./coverage/report
