@@ -15,7 +15,7 @@ namespace NoticeBoardApi.PlaywrightTests
             _browser = await _playwright.Chromium.LaunchAsync(new
 BrowserTypeLaunchOptions
             {
-                Headless = false  // set to true for CI/CD; false lets you watch the browser
+                Headless = true  // set to true for CI/CD; false lets you watch the browser
             });
             _page = await _browser.NewPageAsync();
             await _page.GotoAsync(Settings.IndexHtmlPath);
