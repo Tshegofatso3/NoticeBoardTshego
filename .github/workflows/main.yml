@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '8.0.x'
  
       - name: Restore NuGet packages
-        run: dotnet restore NoticeBoardApi.sln
+        run: dotnet restore NoticeBoardApi.slnx
  
       - name: Build solution
         run: dotnet build NoticeBoardApi.sln --no-restore --configuration Release

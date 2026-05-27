@@ -39,7 +39,8 @@ jobs:
  
     
       - name: Restore dotnet tools
-        run: dotnet tool restore
+        run: dotnet tool restoredir
+
  
       - name: Debug coverage output
         run: |
