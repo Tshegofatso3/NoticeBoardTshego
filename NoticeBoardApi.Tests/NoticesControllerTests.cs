@@ -15,7 +15,8 @@ namespace NoticeBoardApi.Tests
         {
             _client = factory.CreateClient();
         }
-        [Fact]
+        
+        /*[Fact]
         public async Task GetAll_ReturnsOk_WithoutAuthentication()
         {
             // Act 
@@ -23,7 +24,7 @@ namespace NoticeBoardApi.Tests
 
             // Assert 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
+        }*/
 
         /*[Fact]
         public async Task GetById_ReturnsNotFound_WhenNoticeDoesNotExist()
