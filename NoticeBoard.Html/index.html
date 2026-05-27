@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Notice Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #1F4E79;
+        }
+
+        h2 {
+            color: #2E75B6;
+            margin-top: 32px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0 14px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 18px;
+            background: #2E75B6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #1F4E79;
+            }
+
+        #message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        #notices {
+            margin-top: 16px;
+        }
+
+        .notice {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+
+        .archived {
+            background: #fff3cd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Notice Board</h1>
+
+    <!-- LOGIN SECTION -->
+    <h2>Login</h2>
+    <label>Username</label>
+    <input type="text" id="username" placeholder="admin" />
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Admin@123" />
+    <button id="loginBtn" onclick="login()">Login</button>
+    <p id="loginMessage"></p>
+
+   
+    <h2>Post a Notice</h2>
+    <label>Title</label>
+    <input type="text" id="title" placeholder="Notice title" />
+    <label>Body</label>
+    <textarea id="body" rows="3" placeholder="Notice body text"></textarea>
+    <button id="postBtn" onclick="postNotice()">Post Notice</button>
+    <p id="postMessage"></p>
+
+    
+    <h2>All Notices</h2>
+    <button id="loadBtn" onclick="loadNotices()">Load Notices</button>
+    <div id="notices"></div>
+
+    <script>
+
+        const API = 'https://localhost:7129'; 
+        let token = localStorage.getItem('nb_token') || '';
+
+        async function login() {
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('loginMessage');
+
+            try {
+                const res = await fetch(`${API}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!res.ok) {
+                    msg.style.color = 'red';
+                    msg.textContent = 'Login failed. Check credentials.';
+                    msg.setAttribute('data-status', 'error');
+                    return;
+                }
+
+                const data = await res.json();
+                token = data.token;                  
+                localStorage.setItem('nb_token', token); 
+
+                msg.style.color = 'green';
+                msg.textContent = 'Login successful. Token received.';
+                msg.setAttribute('data-status', 'success');
+            } catch (err) {
+                msg.style.color = 'red';
+                msg.textContent = `Network error: ${err.message}`;
+                msg.setAttribute('data-status', 'error');
+            }
+        }
+
+        async function postNotice() {
+            
+            if (!token) {
+                
+                token = localStorage.getItem('nb_token') || '';
+            }
+
+            const msg = document.getElementById('postMessage');
+            if (!token) {
+                msg.style.color = 'red';
+                msg.textContent = 'Not authorised. Please login first.';
+                msg.setAttribute('data-status', 'unauthorised');
+                return;
+            }
+
+            const title = document.getElementById('title').value;
+            const body = document.getElementById('body').value;
+
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+               
+                headers['Authorization'] = `Bearer ${token}`;
+
+                const res = await fetch(`${API}/api/notices`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ title, body })
+                });
+
+                if (res.status === 201 || res.ok) {
+                    msg.style.color = 'green';
+                    msg.textContent = 'Notice posted successfully.';
+                    msg.setAttribute('data-status', 'success');
+                    document.getElementById('title').value = '';
+                    document.getElementById('body').value = '';
+                } else if (res.status === 401) {
+                    msg.style.color = 'red';
+                    msg.textContent = 'Not authorised. Please login first.';
+                    msg.setAttribute('data-status', 'unauthorised');
+                } else {
+                    const errText = await res.text().catch(() => `Status ${res.status}`);
+                    msg.style.color = 'red';
+                    msg.textContent = `Error: ${errText}`;
+                    msg.setAttribute('data-status', 'error');
+                }
+            } catch (err) {
+                msg.style.color = 'red';
+                msg.textContent = `Network error: ${err.message}`;
+                msg.setAttribute('data-status', 'error');
+            }
+        }
+
+        async function loadNotices() {
+            const res = await fetch(`${API}/api/notices`);
+            const data = await res.json();
+            const div = document.getElementById('notices');
+            div.innerHTML = '';
+            if (data.length === 0) {
+                div.innerHTML = '<p id="emptyMessage">No notices found.</p>';
+                return;
+            }
+            data.forEach(function (n) {
+                div.innerHTML += `<div class="notice ${n.isArchived ? 'archived' : ''}" dataid="${n.id}">
+              <strong>${n.title}</strong><br>${n.body}<br>
+              <small>By ${n.createdBy} on ${n.createdAt}${n.isArchived ? ' — ARCHIVED' :
+                        ''}</small>
+            </div>`;
+            });
+        }
+    </script>
+</body>
+</html>

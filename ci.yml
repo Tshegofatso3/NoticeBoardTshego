@@ -1,0 +1,64 @@
+name: CI — Build and Test 
+ 
+
+on: 
+  push: 
+    branches: [ main, 'feature/**' ] 
+  pull_request: 
+    branches: [ main ] 
+ 
+
+jobs: 
+  build-and-test: 
+    name: Build and Run Tests 
+    runs-on: ubuntu-latest 
+ 
+
+    steps: 
+      - name: Checkout code 
+        uses: actions/checkout@v4 
+ 
+
+      - name: Setup .NET 8 
+        uses: actions/setup-dotnet@v4 
+        with: 
+          dotnet-version: '8.0.x' 
+ 
+
+      - name: Restore NuGet packages 
+        run: dotnet restore 
+ 
+
+      - name: Build solution 
+        run: dotnet build --no-restore --configuration Release 
+ 
+
+      - name: Run tests 
+        run: | 
+          dotnet test --no-build --configuration Release \ 
+            --collect:'XPlat Code Coverage' \ 
+            --results-directory ./coverage \ 
+            --verbosity normal 
+      - name: Restore dotnet tools 
+        run: dotnet tool restore 
+     
+
+      - name: Generate coverage report 
+        run: | 
+          dotnet tool run reportgenerator \ 
+            -reports:'./coverage/**/coverage.cobertura.xml' \ 
+            -targetdir:'./coverage/report' \ 
+            -reporttypes:'Html;MarkdownSummaryGithub' 
+ 
+
+      - name: Publish coverage summary 
+        if: always() 
+        run: cat ./coverage/report/SummaryGithub.md >> $GITHUB_STEP_SUMMARY 
+ 
+
+      - name: Upload coverage report artifact 
+        if: always() 
+        uses: actions/upload-artifact@v4 
+        with:
+          name: coverage-report 
+          path: ./coverage/report

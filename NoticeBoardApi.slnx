@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path="ci.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="NoticeBoard.Html/NoticeBoard.Html.csproj" Id="048ee982-fdf5-4077-8991-4b1b58736cda" />
+  <Project Path="NoticeBoardApi.PlaywrightTests/NoticeBoardApi.PlaywrightTests.csproj" Id="579c48d0-89d9-47c2-8ea6-a82fe538b7de" />
+  <Project Path="NoticeBoardApi.SeleniumTests/NoticeBoardApi.SeleniumTests.csproj" Id="fc897944-729f-4b5a-8c39-dbd04c30b008" />
+  <Project Path="NoticeBoardApi.Tests/NoticeBoardApi.Tests.csproj" Id="9389e046-bb95-431b-9820-578e5337f5ea" />
+  <Project Path="NoticeBoardApi/NoticeBoardApi.csproj" />
+</Solution>

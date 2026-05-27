@@ -1,0 +1,266 @@
+{
+	"id": "7b9ad154-50eb-4709-98ac-8ee879426ef8",
+	"name": "NoticeBoardApi Tests",
+	"timestamp": "2026-05-19T07:56:33.693Z",
+	"collection_id": "54712502-f32ca261-10e3-4e89-a50b-be3bc7524281",
+	"folder_id": "54712502-fa40567f-5237-42f6-9c12-9bb951e8435a",
+	"environment_id": "0",
+	"totalPass": 9,
+	"delay": 0,
+	"persist": true,
+	"status": "error",
+	"startedAt": "2026-05-19T07:56:31.554Z",
+	"totalFail": 3,
+	"results": [
+		{
+			"id": "2b7eb6ac-9418-444b-8bf8-74a19aa322ca",
+			"name": "Login as  admin",
+			"url": "https://localhost:7129/api/auth/login",
+			"time": 395,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login returns 200": true,
+				"Response contains token": true
+			},
+			"testPassFailCounts": {
+				"Login returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				395
+			],
+			"allTests": [
+				{
+					"Login returns 200": true,
+					"Response contains token": true
+				}
+			]
+		},
+		{
+			"id": "01fb325c-8493-4c5e-be34-5bcb8754af55",
+			"name": "Login as Viewer",
+			"url": "https://localhost:7129/api/auth/login",
+			"time": 234,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login returns 200": true,
+				"Response contains token": true
+			},
+			"testPassFailCounts": {
+				"Login returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				234
+			],
+			"allTests": [
+				{
+					"Login returns 200": true,
+					"Response contains token": true
+				}
+			]
+		},
+		{
+			"id": "e34d720e-0f00-45c8-91a8-bfc0db1b8065",
+			"name": "Login with wrong Password",
+			"url": "https://localhost:7129/api/auth/login",
+			"time": 237,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Returns 401 Unauthorized for wrong password": true,
+				"Response indicates authentication failure": true
+			},
+			"testPassFailCounts": {
+				"Returns 401 Unauthorized for wrong password": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response indicates authentication failure": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				237
+			],
+			"allTests": [
+				{
+					"Returns 401 Unauthorized for wrong password": true,
+					"Response indicates authentication failure": true
+				}
+			]
+		},
+		{
+			"id": "a14bd817-7bc7-4048-a022-f33d6fcf9739",
+			"name": "Get All",
+			"url": "https://localhost:7129/api/Notices",
+			"time": 58,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login returns 200": true,
+				"Response contains token": false
+			},
+			"testPassFailCounts": {
+				"Login returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains token": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				58
+			],
+			"allTests": [
+				{
+					"Login returns 200": true,
+					"Response contains token": false
+				}
+			]
+		},
+		{
+			"id": "c5022ccc-212c-4c26-9672-fe647fbc8ed3",
+			"name": "Get By ID",
+			"url": "https://localhost:7129/api/Notices/6",
+			"time": 71,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login returns 200": true,
+				"Response contains token": false
+			},
+			"testPassFailCounts": {
+				"Login returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains token": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				71
+			],
+			"allTests": [
+				{
+					"Login returns 200": true,
+					"Response contains token": false
+				}
+			]
+		},
+		{
+			"id": "f98165fc-5370-4b4e-95a7-4a5e9c54dfb2",
+			"name": "Get By no ID",
+			"url": "https://localhost:7129/api/Notices/",
+			"time": 24,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login returns 200": true,
+				"Response contains token": false
+			},
+			"testPassFailCounts": {
+				"Login returns 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains token": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				24
+			],
+			"allTests": [
+				{
+					"Login returns 200": true,
+					"Response contains token": false
+				}
+			]
+		},
+		{
+			"id": "24eac7b3-da54-4bb3-96de-0ab812caa76e",
+			"name": "Post (No Token)",
+			"url": "https://localhost:7129/api/Notices",
+			"time": 21,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				21
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1040,
+	"collection": {
+		"requests": [
+			{
+				"id": "2b7eb6ac-9418-444b-8bf8-74a19aa322ca",
+				"method": "POST"
+			},
+			{
+				"id": "01fb325c-8493-4c5e-be34-5bcb8754af55",
+				"method": "POST"
+			},
+			{
+				"id": "e34d720e-0f00-45c8-91a8-bfc0db1b8065",
+				"method": "POST"
+			},
+			{
+				"id": "a14bd817-7bc7-4048-a022-f33d6fcf9739",
+				"method": "GET"
+			},
+			{
+				"id": "c5022ccc-212c-4c26-9672-fe647fbc8ed3",
+				"method": "GET"
+			},
+			{
+				"id": "f98165fc-5370-4b4e-95a7-4a5e9c54dfb2",
+				"method": "GET"
+			},
+			{
+				"id": "24eac7b3-da54-4bb3-96de-0ab812caa76e",
+				"method": "POST"
+			}
+		]
+	}
+}
