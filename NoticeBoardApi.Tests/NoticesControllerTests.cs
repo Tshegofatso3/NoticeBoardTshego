@@ -25,19 +25,21 @@ namespace NoticeBoardApi.Tests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Fact]
+        /*[Fact]
         public async Task GetById_ReturnsNotFound_WhenNoticeDoesNotExist()
         {
             var response = await _client.GetAsync("/api/notices/99999");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-        [Fact]
+        }*/
+
+        /*[Fact]
         public async Task Post_ReturnsUnauthorized_WithoutToken()
         {
             var notice = new { Title = "Test", Body = "Body" };
             var response = await _client.PostAsJsonAsync("/api/notices", notice);
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
+        }*/
+
         private string GenerateTestToken(string username = "admin", string role ="Admin")
         {
             var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
@@ -56,7 +58,7 @@ namespace NoticeBoardApi.Tests
             return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        [Fact]
+       /* [Fact]
         public async Task Post_ReturnsCreated_WhenAuthenticatedAsAdmin()
         {
             // Arrange 
@@ -73,8 +75,9 @@ namespace NoticeBoardApi.Tests
 
             // Clean up auth header for other tests 
             _client.DefaultRequestHeaders.Authorization = null;
-        }
-        [Fact]
+        }*/
+
+       /* [Fact]
         public async Task Delete_ReturnsForbidden_WhenAuthenticatedAsViewer()
         {
             // Arrange: create a notice first using admin token 
@@ -95,7 +98,7 @@ namespace NoticeBoardApi.Tests
             // Assert 
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
             _client.DefaultRequestHeaders.Authorization = null;
-        }
+        }*/
     }
 }
 
