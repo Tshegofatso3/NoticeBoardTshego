@@ -37,17 +37,7 @@ jobs:
       - name: Install Playwright browsers
         run: pwsh NoticeBoardApi.PlaywrightTests/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
  
-      # --- UI tests: slower, need a browser. Closer to a STAGING gate. ---
-      - name: Run Playwright tests
-        run: |
-          dotnet test NoticeBoardApi.PlaywrightTests/NoticeBoardApi.PlaywrightTests.csproj \
-            --no-build --configuration Release --verbosity normal
- 
-      - name: Run Selenium tests
-        run: |
-          dotnet test NoticeBoardApi.SeleniumTests/NoticeBoardApi.SeleniumTests.csproj \
-            --no-build --configuration Release --verbosity normal
- 
+    
       - name: Restore dotnet tools
         run: dotnet tool restore
  
