@@ -1,72 +1,55 @@
-name: CI — Build and Test
-on:
-  push:
-    branches: [ main, 'feature/**' ]
-  pull_request:
-    branches: [ main ]
-jobs:
-  build-and-test:
-    name: Build and Run Tests
-    runs-on: ubuntu-latest
+name: CI — Build and Test 
  
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+on: 
+  push: 
+    branches: [ main, 'feature/**' ] 
+  pull_request: 
+    branches: [ main ] 
  
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+jobs: 
+  build-and-test: 
+    name: Build and Run Tests 
+    runs-on: ubuntu-latest 
  
-      - name: Restore NuGet packages
-        run: dotnet restore NoticeBoardApi.sln
+    steps: 
+      - name: Checkout code 
+        uses: actions/checkout@v4 
  
-      - name: Build solution
-        run: dotnet build NoticeBoardApi.sln --no-restore --configuration Release
+      - name: Setup .NET 8 
+        uses: actions/setup-dotnet@v4 
+        with: 
+          dotnet-version: '8.0.x' 
  
-      # --- Unit tests: fast, no browser needed. This is your DEV gate. ---
-      - name: Run unit tests
-        run: |
-          dotnet test NoticeBoardApi.Tests/NoticeBoardApi.Tests.csproj \
-            --no-build --configuration Release \
-            --collect:'XPlat Code Coverage' \
-            --results-directory ./coverage \
-            --verbosity normal
+      - name: Restore NuGet packages 
+        run: dotnet restore 
  
-      # --- Install Playwright's browser binaries (after build, before UI tests) ---
-      - name: Install Playwright browsers
-        run: pwsh NoticeBoardApi.PlaywrightTests/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
+      - name: Build solution 
+        run: dotnet build --no-restore --configuration Release 
  
-    
-      - name: Restore dotnet tools
-        run: dotnet tool restoredir
-
+      - name: Run tests 
+        run: | 
+          dotnet test --no-build --configuration Release \ 
+            --collect:'XPlat Code Coverage' \ 
+            --results-directory ./coverage \ 
+            --verbosity normal 
  
-      - name: Debug coverage output
-        run: |
-          pwd
-          ls -R ./coverage || echo "no coverage dir"
+      - name: Restore dotnet tools 
+        run: dotnet tool restore 
+       
+      - name: Generate coverage report 
+        run: | 
+          dotnet tool run reportgenerator \ 
+            -reports:'./coverage/**/coverage.cobertura.xml' \ 
+            -targetdir:'./coverage/report' \ 
+            -reporttypes:'Html;MarkdownSummaryGithub' 
  
-      - name: Generate coverage report
-        if: always()
-        run: |
-          dotnet tool run reportgenerator \
-            -reports:'./coverage/**/coverage.cobertura.xml' \
-            -targetdir:'./coverage/report' \
-            -reporttypes:'Html;MarkdownSummaryGithub'
+      - name: Publish coverage summary 
+        if: always() 
+        run: cat ./coverage/report/SummaryGithub.md >> $GITHUB_STEP_SUMMARY 
  
-      - name: Publish coverage summary
-        if: always()
-        run: |
-          if [ -f ./coverage/report/SummaryGithub.md ]; then
-            cat ./coverage/report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Coverage summary not found — skipping" >> "$GITHUB_STEP_SUMMARY"
-          fi
- 
-      - name: Upload coverage report artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: ./coverage/report
+      - name: Upload coverage report artifact 
+        if: always() 
+        uses: actions/upload-artifact@v4 
+        with: 
+          name: coverage-report 
+          path: ./coverage/report 
